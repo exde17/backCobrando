@@ -1,5 +1,12 @@
-import { Cobrador } from 'src/cobrador/entities/cobrador.entity';
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { User } from 'src/auth/entities/user.entity';
+import { Barrio } from 'src/barrio/entities/barrio.entity';
+import {
+  Column,
+  Entity,
+  ManyToOne,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 
 @Entity()
 export class Ruta {
@@ -11,7 +18,9 @@ export class Ruta {
     default: [],
   })
   barrio: string[];
+  // @OneToMany(() => Barrio, (barrio) => barrio.ruta, { cascade: true })
+  // barrio: Barrio;
 
-  @ManyToOne(() => Cobrador, (cobrador) => cobrador.ruta)
-  cobrador: Cobrador;
+  @ManyToOne(() => User, (user) => user.ruta)
+  user: User;
 }

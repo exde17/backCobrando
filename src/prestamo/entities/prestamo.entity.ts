@@ -1,5 +1,8 @@
+import { ApiProperty } from '@nestjs/swagger';
+import { Transform } from 'class-transformer';
+import { IsDate, IsNotEmpty } from 'class-validator';
 import { Abono } from 'src/abonos/entities/abono.entity';
-import { Cliente } from 'src/cliente/entities/cliente.entity';
+import { User } from 'src/auth/entities/user.entity';
 import {
   Column,
   Entity,
@@ -16,23 +19,48 @@ export class Prestamo {
   @OneToMany(() => Abono, (abono) => abono.prestamo, { cascade: true })
   abono: Abono;
 
-  @ManyToOne(() => Cliente, (cliente) => cliente.prestamo)
-  cliente: Cliente;
+  @ManyToOne(() => User, (user) => user.prestamo)
+  user: User;
 
+  @ApiProperty()
   @Column({
+    name: 'valor_prestamo',
     type: 'numeric',
     default: 0,
   })
-  valor: number;
+  valor_prestamo: number;
 
+  @ApiProperty()
   @Column({
     type: 'numeric',
     default: 0,
   })
   intereses: number;
 
+  @ApiProperty()
   @Column('numeric', {
     default: 0,
   })
   dias: number;
+
+  @ApiProperty({
+    description: 'Fecha de prestamo',
+    nullable: false,
+  })
+  @IsNotEmpty()
+  @Transform(({ value }) => new Date(value))
+  @IsDate()
+  fecha: Date;
+
+  @ApiProperty()
+  @Column()
+  estado: string;
+
+  @ApiProperty()
+  @Column({
+    name: 'valor_total',
+    type: 'numeric',
+    default: 0,
+  })
+  valor_total: number;
 }
