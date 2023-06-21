@@ -7,6 +7,7 @@ import { AbonosModule } from './abonos/abonos.module';
 import { PrestamoModule } from './prestamo/prestamo.module';
 import { BarrioModule } from './barrio/barrio.module';
 import { AuthModule } from './auth/auth.module';
+import { ClientModule } from './client/client.module';
 @Module({
   imports: [
     ConfigModule.forRoot(),
@@ -27,6 +28,7 @@ import { AuthModule } from './auth/auth.module';
     PrestamoModule,
     BarrioModule,
     AuthModule,
+    ClientModule,
   ],
   controllers: [],
   providers: [],

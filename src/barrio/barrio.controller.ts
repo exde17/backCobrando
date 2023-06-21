@@ -10,12 +10,14 @@ import {
 import { BarrioService } from './barrio.service';
 import { CreateBarrioDto } from './dto/create-barrio.dto';
 import { UpdateBarrioDto } from './dto/update-barrio.dto';
+import { Auth, ValidRoles } from 'src/auth/interfaces';
 
 @Controller('barrio')
 export class BarrioController {
   constructor(private readonly barrioService: BarrioService) {}
 
   @Post()
+  @Auth(ValidRoles.admin, ValidRoles.superUser)
   create(@Body() createBarrioDto: CreateBarrioDto) {
     return this.barrioService.create(createBarrioDto);
   }

@@ -1,4 +1,5 @@
 import {
+  IsArray,
   IsEmail,
   IsString,
   Matches,
@@ -43,4 +44,8 @@ export class CreateUserDto {
   @IsString()
   @MinLength(1)
   telefonoFamiliar: string;
+
+  @IsArray()
+  @IsString({ each: true })// valida cada elemento del array que se un string
+  roles: string[];
 }

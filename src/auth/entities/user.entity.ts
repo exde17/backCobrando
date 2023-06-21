@@ -1,3 +1,4 @@
+import { UUID } from 'crypto';
 import { Prestamo } from 'src/prestamo/entities/prestamo.entity';
 import { Ruta } from 'src/rutas/entities/ruta.entity';
 import {
@@ -11,7 +12,7 @@ import {
 
 @Entity('users')
 export class User {
-  @PrimaryGeneratedColumn()
+  @PrimaryGeneratedColumn('uuid')
   id: string;
 
   @Column('text', {

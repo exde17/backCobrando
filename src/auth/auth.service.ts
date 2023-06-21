@@ -12,6 +12,7 @@ import * as bcrypt from 'bcrypt';
 import { LoginUserDto } from './dto/login-user.dto';
 import { JwtService } from '@nestjs/jwt';
 import { PaginationDto } from 'src/common/dtos/pagination.dto';
+import { jwtPayload } from './interfaces/jwt-payload.interface';
 
 @Injectable()
 export class AuthService {
@@ -33,11 +34,10 @@ export class AuthService {
       await this.userRepository.save(user);
       delete user.password;
 
-      // return user;
-      return {
+      return ({
         ...user,
-        token: await this.jwtService.signAsync({ ...user }),
-      };
+        token: this.getjwtToken({ id: user.id }),
+      }) 
     } catch (error) {
       this.capturarError(error);
     }
@@ -46,18 +46,14 @@ export class AuthService {
   //LOGIN
   async loginUser(loginUserDto: LoginUserDto) {
     // try {
+    const { password, email } = loginUserDto
+
     const user = await this.userRepository.findOne({
-      where: { email: loginUserDto.email },
+      where: { email },
       select: {
         email: true,
         password: true,
-        fullName: true,
-        documento: true,
-        telefono: true,
-        direccion: true,
-        roles: true,
-        telefonoFamiliar: true,
-        isActive: true,
+        id: true,
       },
     });
 
@@ -66,27 +62,11 @@ export class AuthService {
     if (!bcrypt.compareSync(loginUserDto.password, user.password))
       throw new UnauthorizedException('el password no es correcto');
 
-    const payload = {
-      fullName: user.fullName,
-      documento: user.documento,
-      telefono: user.telefono,
-      direccion: user.direccion,
-      roles: user.roles,
-      telefonoFamiliar: user.telefonoFamiliar,
-      isActive: user.isActive,
-      email: user.email,
-    };
-    // return {
-    //   access_token: await this.jwtService.signAsync(payload),
-    // };
-    const toke = await this.jwtService.signAsync(payload); // OBTENGO EL TOKEN
+    return ({
+      ...user,
+      token: this.getjwtToken({ id: user.id }),
+    })  
 
-    const decodedToken = this.jwtService.verify(toke); // DESCIFRAR INFO DEL TOKEN
-
-    return {
-      access_token: toke,
-      decodedToken,
-    };
   }
 
   //CAPTURAR LOS ERRORES
@@ -107,5 +87,10 @@ export class AuthService {
       take: limit, //toma la cantidad que estoy especificando en el limite
       skip: offset, //salta todos los que diga este offset
     });
+  }
+
+  private getjwtToken( payload: jwtPayload){
+    const token = this.jwtService.sign( payload );
+    return token;
   }
 }

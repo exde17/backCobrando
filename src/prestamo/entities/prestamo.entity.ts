@@ -3,12 +3,13 @@ import { Transform } from 'class-transformer';
 import { IsDate, IsNotEmpty } from 'class-validator';
 import { Abono } from 'src/abonos/entities/abono.entity';
 import { User } from 'src/auth/entities/user.entity';
+import { Client } from 'src/client/entities/client.entity';
 import {
   Column,
   Entity,
   ManyToOne,
   OneToMany,
-  PrimaryGeneratedColumn,
+  PrimaryGeneratedColumn, 
 } from 'typeorm';
 
 @Entity()
@@ -19,8 +20,11 @@ export class Prestamo {
   @OneToMany(() => Abono, (abono) => abono.prestamo, { cascade: true })
   abono: Abono;
 
-  @ManyToOne(() => User, (user) => user.prestamo)
+  @ManyToOne(() => User, (user) => user.prestamo, {eager: true})
   user: User;
+
+  @ManyToOne(()=> Client, (client)=> client.prestamo,{eager: true})
+  client: Client;
 
   @ApiProperty()
   @Column({
