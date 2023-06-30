@@ -11,9 +11,13 @@ export class Barrio {
   @Column('text', {
     nullable: false,
     name: 'nombre_barrio',
+    unique: true,
   })
   nombre_barrio: string;
 
   // @ManyToOne(() => Ruta, (ruta) => ruta.barrio)
   // ruta: Ruta;
-}
+// }
+
+ }
+

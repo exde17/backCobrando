@@ -5,6 +5,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Client } from './entities/client.entity';
 import { Repository } from 'typeorm';
 import { JwtService } from '@nestjs/jwt';
+import { Ruta } from 'src/rutas/entities/ruta.entity';
 
 @Injectable()
 export class ClientService {
@@ -30,19 +31,35 @@ export class ClientService {
     throw new Error('Method not implemented.');
   }
 
-  findAll() {
-    return `This action returns all client`;
+  async findAll() {
+    const client = await this.clientRepository.find({
+      relations: ['ruta'],
+      select:{ ruta: {id:true} }
+    })
+    return client
   }
 
   findOne(id: number) {
     return `This action returns a #${id} client`;
   }
 
-  update(id: number, updateClientDto: UpdateClientDto) {
-    return `This action updates a #${id} client`;
+  async update(id: string, updateClientDto: UpdateClientDto) {
+
+    try {
+      const client = this.clientRepository.create({
+        ...updateClientDto
+      })
+  
+      const res = await this.clientRepository.update(id, client)
+      return 'cliente actualizado con exito'
+    } catch (error) {
+      return error
+    }
+    
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} client`;
+  async remove(id: string) {
+    const client = await this.clientRepository.delete(id)
+    return 'cliente eliminado exitosamente'
   }
 }

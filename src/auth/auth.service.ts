@@ -4,7 +4,7 @@ import {
   InternalServerErrorException,
   UnauthorizedException,
 } from '@nestjs/common';
-import { CreateUserDto } from './dto/create-user.dto';
+import { CreateUserDto, UpdateUserDto } from './dto/create-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
 import { Repository } from 'typeorm';
@@ -92,5 +92,20 @@ export class AuthService {
   private getjwtToken( payload: jwtPayload){
     const token = this.jwtService.sign( payload );
     return token;
+  }
+
+  //actualizar usuario
+  async updateUser(id: string, updateUserDto: UpdateUserDto) {
+    try {
+      const user= this.userRepository.create({
+        ...updateUserDto,
+      })
+
+      await this.userRepository.update(id, user);
+      return 'usuario actualizado con exito'
+      
+    } catch (error) {
+      return error
+    }
   }
 }

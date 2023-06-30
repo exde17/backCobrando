@@ -28,5 +28,5 @@ export class CreateClientDto {
     telefonoFamiliar: string;
 
     @IsString()
-    ruta: Ruta;
+    ruta: Ruta; 
 }

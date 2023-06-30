@@ -1,6 +1,6 @@
-import { Controller, Post, Body, Get, Query, UseGuards, Req, SetMetadata } from '@nestjs/common';
+import { Controller, Post, Body, Get, Query, UseGuards, Req, SetMetadata, ParseUUIDPipe, Param, Patch } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { CreateUserDto } from './dto/create-user.dto';
+import { CreateUserDto, UpdateUserDto } from './dto/create-user.dto';
 import { LoginUserDto } from './dto/login-user.dto';
 import { PaginationDto } from 'src/common/dtos/pagination.dto';
 // import { AuthGuard } from '../auth.guard';
@@ -29,41 +29,51 @@ export class AuthController {
     return this.authService.loginUser(loginUserDto);
   }
 
-  @Get('full')
-  // @SetMetadata('roles',['admin','super-user'])
-  @RoleProtected(ValidRoles.superUser)
-  @UseGuards(AuthGuard(), UserRoleGuard)
-  beat(@getUser() user: User,
-    @getUser('email') userEmail: string
-  ) {
-    // console.log( user)
-    return {
-      ok: true,
-      userEmail,
-      user
+   // update usuario y sirve para cambiar estado
+   @Patch('update/:id')
+   @Auth(ValidRoles.admin, ValidRoles.superUser)
+   async updateUser(@Param('id', ParseUUIDPipe) id: string, @Body() updateUserDto: UpdateUserDto) {
+     return this.authService.updateUser(id, updateUserDto);
+   }
 
-    }
-  }
+  // @Get('full')
+  // // @SetMetadata('roles',['admin','super-user'])
+  // @RoleProtected(ValidRoles.superUser)
+  // @UseGuards(AuthGuard(), UserRoleGuard)
+  // beat(@getUser() user: User,
+  //   @getUser('email') userEmail: string
+  // ) {
+  //   // console.log( user)
+  //   return {
+  //     ok: true,
+  //     userEmail,
+  //     user
 
-  @Get('full2')
-  @Auth(ValidRoles.superUser)
-  beat2(@getUser() user: User,
-    @getUser('email') userEmail: string
-  ) {
-    // console.log( user)
-    return {
-      ok: true,
-      userEmail,
-      user
+  //   }
+  // }
 
-    }
-  }
+  // @Get('full2')
+  // @Auth(ValidRoles.superUser)
+  // beat2(@getUser() user: User,
+  //   @getUser('email') userEmail: string
+  // ) {
+  //   // console.log( user)
+  //   return {
+  //     ok: true,
+  //     userEmail,
+  //     user
+
+  //   }
+  // }
   
   @Get('todos')
-  @UseGuards(AuthGuard())
+  // @UseGuards(AuthGuard())
+  @Auth(ValidRoles.admin,ValidRoles.superUser)
   findAll(@Query() paginationDto: PaginationDto) {
     console.log(paginationDto);
     return this.authService.findAll(paginationDto);
   }
+
+ 
 
 }

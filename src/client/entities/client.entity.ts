@@ -44,6 +44,13 @@ export class Client {
     })
     telefonoFamiliar: string;
 
+    @Column('bool',{
+        nullable: false,
+        default: true,
+        name: 'estado'
+    })
+    estado: boolean;
+
     @OneToMany(()=> Prestamo, 
     (prestamo) => prestamo.client, 
     {cascade: true})
@@ -51,7 +58,7 @@ export class Client {
 
     @ManyToOne(()=> Ruta, 
     (ruta)=> ruta.client,
-    {eager: true})
+    )
     ruta: Ruta
 
 
