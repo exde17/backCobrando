@@ -1,4 +1,5 @@
 import { UUID } from 'crypto';
+import { Abono } from 'src/abonos/entities/abono.entity';
 import { Prestamo } from 'src/prestamo/entities/prestamo.entity';
 import { Ruta } from 'src/rutas/entities/ruta.entity';
 import {
@@ -70,6 +71,9 @@ export class User {
 
   @OneToMany(() => Ruta, (ruta) => ruta.user, { cascade: true })
   ruta?: Ruta[];
+
+  @OneToMany(()=> Abono, (abono) => abono.user, { cascade: true })
+  abono: Abono[];
 
   @BeforeInsert()
   checketEmailInsert() {
