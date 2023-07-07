@@ -6,11 +6,14 @@ import { User } from 'src/auth/entities/user.entity';
 import { Client } from 'src/client/entities/client.entity';
 import {
   Column,
+  CreateDateColumn,
   Entity,
   ManyToOne,
   OneToMany,
-  PrimaryGeneratedColumn, 
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,  
 } from 'typeorm';
+import { Estado } from '../utils/estado.enum';
 
 @Entity()
 export class Prestamo {
@@ -18,53 +21,73 @@ export class Prestamo {
   id: string;
 
   @OneToMany(() => Abono, (abono) => abono.prestamo, { cascade: true })
-  abono: Abono;
+  abonos: Abono[];
 
   @ManyToOne(() => User, (user) => user.prestamo, {eager: true})
   user: User;
 
-  @ManyToOne(()=> Client, (client)=> client.prestamo,{eager: true})
-  client: Client;
+  @ManyToOne(() => Client, (client) => client.prestamos)
+client: Client;
 
   @ApiProperty()
   @Column({
     name: 'valor_prestamo',
     type: 'numeric',
-    default: 0,
+    nullable: false
   })
   valor_prestamo: number;
 
   @ApiProperty()
   @Column({
     type: 'numeric',
-    default: 0,
+    default: 10,
   })
   intereses: number;
 
   @ApiProperty()
   @Column('numeric', {
-    default: 0,
+    default: 30,
   })
   dias: number;
 
-  @ApiProperty({
-    description: 'Fecha de prestamo',
-    nullable: false,
-  })
-  @IsNotEmpty()
-  @Transform(({ value }) => new Date(value))
-  @IsDate()
+  @Column({
+     type: 'date', 
+     name: 'fecha_limite' 
+    })
   fecha: Date;
 
+  @CreateDateColumn({
+    type: 'timestamptz',
+    default: () => 'CURRENT_TIMESTAMP',
+    name: 'created_at',
+  })
+  createAt: Date
+
+  @UpdateDateColumn({
+    type: 'timestamptz',
+    default: () => 'CURRENT_TIMESTAMP',
+    name: 'updated_at',
+  })
+  updateAt: Date
+
   @ApiProperty()
-  @Column()
-  estado: string;
+  @Column('enum',{
+    enum: Estado,
+    default: Estado.ACTIVO,
+  })
+  estado: Estado;
 
   @ApiProperty()
   @Column({
     name: 'valor_total',
     type: 'numeric',
-    default: 0,
   })
   valor_total: number;
+
+  @ApiProperty()
+  @Column({
+    name: 'valor_cuotas',
+    type: 'numeric',
+  })
+  valor_cuotas: number;
 }

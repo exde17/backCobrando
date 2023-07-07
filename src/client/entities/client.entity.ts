@@ -51,10 +51,12 @@ export class Client {
     })
     estado: boolean;
 
-    @OneToMany(()=> Prestamo, 
-    (prestamo) => prestamo.client, 
-    {cascade: true})
-    prestamo: Prestamo
+    // @OneToMany(()=> Prestamo, 
+    // (prestamo) => prestamo.client, 
+    // {cascade: true})
+    // prestamo: Prestamo
+    @OneToMany(() => Prestamo, (prestamo) => prestamo.client, { cascade: true })
+prestamos: Prestamo[];
 
     @ManyToOne(()=> Ruta, 
     (ruta)=> ruta.client,

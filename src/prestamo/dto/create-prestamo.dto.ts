@@ -1,54 +1,26 @@
 import { ApiProperty } from "@nestjs/swagger";
+import { IsDate, IsDecimal, IsNumber, IsString } from "class-validator";
 import { UUID } from "crypto";
+import { User } from "src/auth/entities/user.entity";
+import { Client } from "src/client/entities/client.entity";
 import { Column } from "typeorm";
 
 export class CreatePrestamoDto {
-    // @ApiProperty()
-    // @Column('text',{
-    //    name: 'user', 
-    //    nullable: false
-    // })
-    // user: string;
+    
 
     @ApiProperty()
-    @Column('numeric',{
-        name: 'valor_prestamo',
-        nullable: false
-    })
+    @IsNumber()
     valor_prestamo: number;
 
     @ApiProperty()
-    @Column('numeric',{
-        name: 'intereses',
-        nullable: false
-    })
+    @IsNumber()
     intereses: number;
 
     @ApiProperty()
-    @Column('numeric',{
-        name: 'dias',
-        nullable: false
-    })
+    @IsNumber()
     dias: number;
 
     @ApiProperty()
-    @Column('date',{
-        name: 'fecha',
-        nullable: false
-    })
-    fecha: Date;
-
-    @ApiProperty()
-    @Column('text',{
-        name: 'estado',
-        nullable: false
-    })
-    estado: string;
-
-    @ApiProperty()
-    @Column('numeric',{
-        name: 'valor_total',
-        nullable: false
-    })
-    valor_total: number;
+    @IsString()
+    client: Client
 }

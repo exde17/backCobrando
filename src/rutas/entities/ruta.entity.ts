@@ -8,6 +8,8 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
+import { NombreRutas } from '../utils/nombre.enum';
+import { EstadoEnum } from '../utils/estado.enum';
 
 @Entity()
 export class Ruta {
@@ -22,16 +24,25 @@ export class Ruta {
   // @OneToMany(() => Barrio, (barrio) => barrio.ruta, { cascade: true })
   // barrio: Barrio;
 
-  @Column('text', {
+  @Column('enum', {
     nullable: false,
+    enum: NombreRutas,
     name: 'nombre',
   })
-  nombre: string;
+  nombre: NombreRutas;
 
+  @Column('enum',{
+    nullable: false,
+    enum: EstadoEnum,
+    default: EstadoEnum.ACTIVO,
+    name: 'estado'
+  })
+  estado: EstadoEnum
+  
   @ManyToOne(() => User, (user) => user.ruta)
   user: User;
 
   @OneToMany(()=> Client, 
-  (client)=> client.ruta, { cascade: true })
+  (client)=> client.ruta)
   client: Client
 }

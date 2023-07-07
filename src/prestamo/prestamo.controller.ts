@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Req, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Req, UseGuards, ParseUUIDPipe } from '@nestjs/common';
 import { PrestamoService } from './prestamo.service';
 import { CreatePrestamoDto } from './dto/create-prestamo.dto';
 import { UpdatePrestamoDto } from './dto/update-prestamo.dto';
@@ -18,9 +18,11 @@ export class PrestamoController {
 
 
   @Post()
-  @Auth(ValidRoles.user)
-  async create(@Body() createPrestamoDto: CreatePrestamoDto) {
-    return await this.prestamoService.create(createPrestamoDto); 
+  @Auth(ValidRoles.admin, ValidRoles.cobrador, ValidRoles.superUser)
+  async create(@Body() createPrestamoDto: CreatePrestamoDto, 
+  @Req() request: Request,) { // Añade el decorador @Req() para obtener la solicitud
+    const user = request.user; // Obtén el usuario autenticado de la solicitud
+    return await this.prestamoService.create(createPrestamoDto, user); 
   }
 
   @Get('full')
@@ -40,9 +42,10 @@ export class PrestamoController {
     return this.prestamoService.findOne(+id);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updatePrestamoDto: UpdatePrestamoDto) {
-    return this.prestamoService.update(+id, updatePrestamoDto);
+  @Patch('update/:id')
+  @Auth(ValidRoles.admin, ValidRoles.cobrador, ValidRoles.superUser)
+  update(@Param('id', ParseUUIDPipe) id: string, @Body() updatePrestamoDto: UpdatePrestamoDto) {
+    return this.prestamoService.update(id, updatePrestamoDto);
   }
 
   @Delete(':id')

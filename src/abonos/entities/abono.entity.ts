@@ -15,7 +15,7 @@ export class Abono {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @ManyToOne(() => Prestamo, (prestamo) => prestamo.abono)
+  @ManyToOne(() => Prestamo, (prestamo) => prestamo.abonos)
   prestamo: Prestamo;
 
   @ApiProperty()
