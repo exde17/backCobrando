@@ -7,6 +7,7 @@ import { Repository } from 'typeorm';
 import * as moment from 'moment';
 import { User } from 'src/auth/entities/user.entity';
 import { Estado } from './utils/estado.enum';
+import { EstadoEnum } from 'src/rutas/utils/estado.enum';
 // import { v4 as uuidv4 } from 'uuid';
 
 @Injectable()
@@ -75,9 +76,6 @@ export class PrestamoService {
         
   }
 
-  findAll() {
-    return `This action returns all prestamo rr`;
-  }
 
   findOne(id: number) {
     return `This action returns a #${id} prestamo`;
@@ -153,7 +151,41 @@ export class PrestamoService {
     
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} prestamo`;
+  //cambiar estado del prestamo
+  async updateEstado(id: string) {
+    
+    try {
+      const prest = await this.prestamoRepository.findOne({
+        where: { id },
+      })
+
+      if( prest){
+        if(prest.estado == 'ACTIVO'){
+          prest.estado = Estado.INACTIVO
+        }else{
+          prest.estado = Estado.ACTIVO
+        }
+      }else{
+        throw new Error('El prestamo no existe');
+      }
+      const prestamo = this.prestamoRepository.save(prest)
+      return `el estado cambio exitosamente a ${prest.estado}`
+    }
+     catch (error) {
+      return ('error al cambiar el estado del prestamo: '+ error)
+      
+    }
+  } 
+
+  //traer todo
+  async findAllPrestamos() {
+    try {
+      const prestamos = await this.prestamoRepository.find({
+        relations: ['client'],
+      })
+      return prestamos
+    } catch (error) {
+      return ('error al traer los prestamos: '+ error)
+    }
   }
 }

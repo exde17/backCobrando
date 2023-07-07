@@ -16,7 +16,7 @@ export class PrestamoController {
   constructor(private readonly prestamoService: PrestamoService) {}
 
 
-
+//crear prestamo
   @Post()
   @Auth(ValidRoles.admin, ValidRoles.cobrador, ValidRoles.superUser)
   async create(@Body() createPrestamoDto: CreatePrestamoDto, 
@@ -25,16 +25,11 @@ export class PrestamoController {
     return await this.prestamoService.create(createPrestamoDto, user); 
   }
 
-  @Get('full')
-  @Auth(ValidRoles.superUser)
-  beat(@Req() request: Express.Request) {
-    
-    return {
-      ok: true,
-      message: 'hola a todos',
-      user: { name: 'mario'}
-
-    }
+  //traer todo
+  @Get()
+  @Auth(ValidRoles.admin, ValidRoles.cobrador, ValidRoles.superUser)
+  async findAll() {
+    return await this.prestamoService.findAllPrestamos();
   }
 
   @Get(':id')
@@ -42,18 +37,22 @@ export class PrestamoController {
     return this.prestamoService.findOne(+id);
   }
 
+  //actualizar prestamo
   @Patch('update/:id')
   @Auth(ValidRoles.admin, ValidRoles.cobrador, ValidRoles.superUser)
-  update(@Param('id', ParseUUIDPipe) id: string, @Body() updatePrestamoDto: UpdatePrestamoDto) {
-    return this.prestamoService.update(id, updatePrestamoDto);
+  async update(@Param('id', ParseUUIDPipe) id: string, @Body() updatePrestamoDto: UpdatePrestamoDto) {
+    return await this.prestamoService.update(id, updatePrestamoDto);
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.prestamoService.remove(+id);
+  //cambiar estado de prestamo
+  @Patch('estado/:id')
+  @Auth(ValidRoles.admin, ValidRoles.cobrador, ValidRoles.superUser)
+  async updateEstado(@Param('id', ParseUUIDPipe) id: string) {
+    return await this.prestamoService.updateEstado(id);
   }
+  
 }
-function GetUser(): (target: PrestamoController, propertyKey: "create", parameterIndex: 0) => void {
-  throw new Error('Function not implemented.');
-}
+// function GetUser(): (target: PrestamoController, propertyKey: "create", parameterIndex: 0) => void {
+//   throw new Error('Function not implemented.');
+// }
 
