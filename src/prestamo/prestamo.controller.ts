@@ -32,9 +32,25 @@ export class PrestamoController {
     return await this.prestamoService.findAllPrestamos();
   }
 
+  //traer un prestamo en especifico
   @Get('traer/:id')
   findOne(@Param('id', ParseUUIDPipe) id: string) {
     return this.prestamoService.findOne(id);
+  }
+
+  //traer los prestamos que relacionan al cobrador. este es para admin y super user
+  @Get('user/:id')
+  @Auth(ValidRoles.admin, ValidRoles.cobrador, ValidRoles.superUser)
+  async findPrestamosCobrador(@Param('id', ParseUUIDPipe) id: string) {
+    return await this.prestamoService.findPrestamosCobrador(id);
+  }
+
+  //traer los prestamos que relacionan al cobrador. este es para el cobrador
+  @Get('cobrador')
+  @Auth(ValidRoles.admin, ValidRoles.cobrador, ValidRoles.superUser)
+  async findPrestamosCobrador2(@Req() request: Request) {
+    const user = request.user;
+    return await this.prestamoService.findPrestamosCobrador2(user);
   }
 
   //actualizar prestamo

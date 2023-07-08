@@ -196,4 +196,31 @@ export class PrestamoService {
       return ('error al traer los prestamos: '+ error)
     }
   }
+
+  //traer los prestamos que relacionan al cobrador
+  async findPrestamosCobrador(id: string) {
+    try {
+      const prestamos = await this.prestamoRepository.find({
+        where: { user:{ id } },
+        relations: ['client'],
+      })
+      return prestamos
+    } catch (error) {
+      return ('error al traer los prestamos: '+ error)
+    }
+  }
+
+  //traer los prestamos que relacionan al cobrador. este es para el cobrador
+  async findPrestamosCobrador2(user: any) {
+    try {
+      
+      const prestamos = await this.prestamoRepository.find({
+        where: { user:user },
+        relations: ['client'],
+      })
+      return prestamos
+    } catch (error) {
+      return ('error al traer los prestamos: '+ error)
+    }
+  }
 }
