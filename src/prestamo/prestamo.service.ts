@@ -77,8 +77,16 @@ export class PrestamoService {
   }
 
 
-  findOne(id: number) {
-    return `This action returns a #${id} prestamo`;
+  findOne(id: string) {
+    try {
+      return this.prestamoRepository.findOne({
+        where: { id: id },
+      })
+    } catch (error) {
+      throw new Error('El prestamo no existe'+ error);
+    }
+    
+    
   }
 
   //actualizar prestamo

@@ -25,7 +25,7 @@ export class Abono {
   user: User;
 
   @ApiProperty()
-  @Column('text', {
+  @Column('numeric', {
     nullable: false,
     name: 'valor_abono',
   })

@@ -32,9 +32,9 @@ export class PrestamoController {
     return await this.prestamoService.findAllPrestamos();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.prestamoService.findOne(+id);
+  @Get('traer/:id')
+  findOne(@Param('id', ParseUUIDPipe) id: string) {
+    return this.prestamoService.findOne(id);
   }
 
   //actualizar prestamo
