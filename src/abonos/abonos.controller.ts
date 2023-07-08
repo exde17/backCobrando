@@ -25,18 +25,20 @@ export class AbonosController {
     return this.abonosService.findAll();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.abonosService.findOne(+id);
+  @Get('todos/:id')
+  findOne(@Param('id', ParseUUIDPipe) id: string) {
+    return this.abonosService.findOne(id);
   }
 
   @Patch('update/:id')
+  @Auth(ValidRoles.admin, ValidRoles.cobrador, ValidRoles.superUser)
   update(@Param('id', ParseUUIDPipe) id: string, @Body() updateAbonoDto: UpdateAbonoDto) {
     return this.abonosService.update(id, updateAbonoDto);
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.abonosService.remove(+id);
+  @Delete('delete/:id')
+  @Auth(ValidRoles.admin, ValidRoles.superUser)
+  remove(@Param('id', ParseUUIDPipe) id: string) {
+    return this.abonosService.remove(id);
   }
 }

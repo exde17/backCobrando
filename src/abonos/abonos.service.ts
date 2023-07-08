@@ -59,8 +59,24 @@ export class AbonosService {
     return `This action returns all abonos`; 
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} abono`;
+  //traer todos los abonos relacionados a un prestamo
+  async findOne(id: string) {
+    try {
+      
+      const abono= await this.abonoRepository.find({
+        relations:['prestamo'],
+        where:{ prestamo:{ id } }
+      })
+
+      if(!abono){
+        throw new NotFoundException('El abono no existe')
+      }
+      return abono
+    } catch (error) {
+      throw new NotFoundException(error)
+      
+    }
+    
   }
 
   //actualizar abono
@@ -107,8 +123,39 @@ export class AbonosService {
     }
   }
 
-  remove(id: number) {
-    //TODO: cuando se valla a eliminar es mejor poner un estado y poder ver el usuario que lo hizo y una observacion por que lo hizo
-    return `This action removes a #${id} abono`;
+  async remove(id: string) {
+    try {
+      //verifico que exista el abono
+      const getAbono = await this.abonoRepository.findOne({
+        relations:['prestamo'],
+        where:{ id }
+      })
+      
+      if(getAbono){
+        console.log('id: ',getAbono.prestamo.id)
+        const prestamo = await this.prestamoRepository.findOne({
+          where:{ id: getAbono.prestamo.id }
+        })
+        
+
+        if(prestamo){
+          prestamo.valor_prestamo = Number(prestamo.valor_prestamo) + Number(getAbono.valor_abono)
+          await this.prestamoRepository.save(prestamo)
+        }else{
+          throw new NotFoundException('El prestamo no existe')
+        }
+        
+      }else{
+        throw new NotFoundException('El abono no existe')
+      }
+
+      //elimina abobo
+      const abono = await this.abonoRepository.delete(id)
+      console.log(abono)
+      return true
+    } catch (error) {
+      throw new HttpException('error al eliminar el abono', HttpStatus.NOT_FOUND);
+    }
+    
   }
 }
