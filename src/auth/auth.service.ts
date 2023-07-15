@@ -62,10 +62,11 @@ export class AuthService {
     if (!bcrypt.compareSync(loginUserDto.password, user.password))
       throw new UnauthorizedException('el password no es correcto');
 
-    return ({
-      ...user,
+    return ({data:{
+      id: user.id,
+      email: user.email,
       token: this.getjwtToken({ id: user.id }),
-    })  
+    }})  
 
   }
 
