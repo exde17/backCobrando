@@ -74,6 +74,12 @@ export class AuthController {
     return this.authService.findAll(paginationDto);
   }
 
+  //traer roles
+  @Get('roles')
+  @Auth(ValidRoles.admin,ValidRoles.superUser, ValidRoles.cobrador)
+  getRoles() {
+    return this.authService.getRoles();
+  }
  
 
 }

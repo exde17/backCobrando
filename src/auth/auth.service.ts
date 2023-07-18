@@ -13,6 +13,7 @@ import { LoginUserDto } from './dto/login-user.dto';
 import { JwtService } from '@nestjs/jwt';
 import { PaginationDto } from 'src/common/dtos/pagination.dto';
 import { jwtPayload } from './interfaces/jwt-payload.interface';
+import { ValidRoles } from './interfaces';
 
 @Injectable()
 export class AuthService {
@@ -36,7 +37,7 @@ export class AuthService {
 
       return ({
         ...user,
-        token: this.getjwtToken({ id: user.id }),
+        // token: this.getjwtToken({ id: user.id }),
       }) 
     } catch (error) {
       this.capturarError(error);
@@ -108,5 +109,10 @@ export class AuthService {
     } catch (error) {
       return error
     }
+  }
+
+  //traer roles
+  async getRoles() {
+    return Object.values(ValidRoles);
   }
 }
