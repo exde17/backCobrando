@@ -55,6 +55,7 @@ export class AuthService {
         email: true,
         password: true,
         id: true,
+        roles: true,
       },
     });
 
@@ -66,6 +67,7 @@ export class AuthService {
     return ({
       id: user.id,
       email: user.email,
+      rol: user.roles,
       token: this.getjwtToken({ id: user.id }),
     })  
 
