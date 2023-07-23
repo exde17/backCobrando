@@ -81,5 +81,10 @@ export class AuthController {
     return this.authService.getRoles();
   }
  
-
+  //traer solo usuarios con rol cobrador
+  @Get('cobradores')
+  @Auth(ValidRoles.admin,ValidRoles.superUser)
+  getCobradores() {
+    return this.authService.getCobradores();
+  }
 }

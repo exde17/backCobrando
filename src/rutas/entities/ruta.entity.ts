@@ -24,12 +24,12 @@ export class Ruta {
   // @OneToMany(() => Barrio, (barrio) => barrio.ruta, { cascade: true })
   // barrio: Barrio;
 
-  @Column('enum', {
+  @Column('text', {
     nullable: false,
-    enum: NombreRutas,
+    // enum: NombreRutas,
     name: 'nombre',
   })
-  nombre: NombreRutas;
+  nombre: string;
 
   @Column('enum',{
     nullable: false,

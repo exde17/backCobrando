@@ -117,4 +117,30 @@ export class AuthService {
   async getRoles() {
     return Object.values(ValidRoles);
   }
+
+  //traer solo usuarios con rol cobrador
+  async getCobradores() {
+    try {
+      const users = await this.userRepository.find({
+        select: ['id', 'fullName', 'roles'],
+      });
+      const cobradores = users.filter((item) => item?.roles.includes('cobrador'));
+      return cobradores;
+    } catch (error) {
+      // Manejar el error si es necesario
+      throw error;
+    }
+    // try {
+    //   const us = await this.userRepository.find()
+    //   return us.map(item =>{
+    //     if(item.roles.includes('cobrador')){
+    //       return item
+    //     }
+    //   })
+    // } catch (error) {
+      
+    // }
+        
+  }
+
 }
