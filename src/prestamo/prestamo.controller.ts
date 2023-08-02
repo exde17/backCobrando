@@ -13,7 +13,7 @@ import { Auth, ValidRoles } from 'src/auth/interfaces';
 
 @Controller('prestamo')
 export class PrestamoController {
-  constructor(private readonly prestamoService: PrestamoService) {}
+  constructor(private readonly prestamoService: PrestamoService) {} 
 
 
 //crear prestamo

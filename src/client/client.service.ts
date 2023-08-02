@@ -6,6 +6,7 @@ import { Client } from './entities/client.entity';
 import { Repository } from 'typeorm';
 import { JwtService } from '@nestjs/jwt';
 import { Ruta } from 'src/rutas/entities/ruta.entity';
+import { User } from 'src/auth/entities/user.entity';
 
 @Injectable()
 export class ClientService {
@@ -39,8 +40,11 @@ export class ClientService {
     return client
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} client`;
+  async findOne(id: string) {
+    return await this.clientRepository.findOne({
+      relations: ['ruta'],
+      where: { id },
+    });
   }
 
   async update(id: string, updateClientDto: UpdateClientDto) {
@@ -61,5 +65,16 @@ export class ClientService {
   async remove(id: string) {
     const client = await this.clientRepository.delete(id)
     return 'cliente eliminado exitosamente'
+  }
+
+  //trae los clientes que estan relacionados a la ruta que tiene asignada el cobrador
+  async findClientesCobrador(user: any) {
+    const client = await this.clientRepository
+    .createQueryBuilder('client')
+    .leftJoinAndSelect('client.ruta', 'ruta')
+    .where('ruta.user = :user', { user: user.id })
+    .getMany();
+    return client
+    // return user.id
   }
 }

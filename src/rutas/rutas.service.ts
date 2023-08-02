@@ -31,7 +31,12 @@ export class RutasService {
   //llamar todas las rutas
   async findAll() {
     try {
-      return await this.rutaRepository.find()
+      return await this.rutaRepository.find({
+        relations: ['user'],
+        select:{
+          user:{'fullName': true}
+        }
+      })
     } catch (error) {
       return ('error pelao: '+error)
     }

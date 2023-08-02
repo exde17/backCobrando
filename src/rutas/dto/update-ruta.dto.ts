@@ -14,7 +14,7 @@ export class UpdateRutaDto{
     @ApiProperty()
     @IsString()
     @IsOptional()
-    readonly nombre?: NombreRutas;
+    readonly nombre?: string;
 
     @ApiProperty()
     @IsString()

@@ -13,7 +13,7 @@ import { EstadoEnum } from 'src/rutas/utils/estado.enum';
 @Injectable()
 export class PrestamoService {
   constructor(
-    @InjectRepository(Prestamo) private readonly prestamoRepository: Repository<Prestamo>,
+    @InjectRepository(Prestamo) private readonly prestamoRepository: Repository<Prestamo>, 
   ) { }
   
 
